@@ -47,8 +47,12 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="mx-auto w-20 h-20 bg-[#00A86B] rounded-xl flex items-center justify-center border-2 border-black">
-            <span className="text-black font-bold text-2xl font-['Reem_Kufi']">SK</span>
+          <div className="mx-auto w-24 h-24 flex items-center justify-center">
+            <img 
+              src="/kano-logo.png" 
+              alt="KANO Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <h2 className="mt-6 text-4xl font-extrabold text-black font-['Reem_Kufi']">
             Sign in to your account

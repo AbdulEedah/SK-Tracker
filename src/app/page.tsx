@@ -20,10 +20,18 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="mx-auto w-32 h-32 flex items-center justify-center mb-8">
+            <img 
+              src="/kano-logo.png" 
+              alt="KANO Logo" 
+              className="w-full h-full object-contain animate-pulse"
+            />
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A86B] mx-auto mb-4"></div>
+          <p className="text-black font-['Work_Sans'] text-lg">Loading Startup Kano...</p>
+          <p className="text-gray-600 font-['Work_Sans'] text-sm mt-2">Innovation Hub</p>
         </div>
       </div>
     )

@@ -101,16 +101,16 @@ export default function SignUpPage() {
 
   if (isOffline) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full">
-          <Card>
+          <Card className="border-2 border-black">
             <CardContent className="pt-6">
               <div className="text-center">
                 <AlertCircle className="mx-auto h-12 w-12 text-amber-500" />
-                <h2 className="mt-4 text-lg font-semibold text-gray-900">
+                <h2 className="mt-4 text-lg font-semibold text-black font-['Reem_Kufi']">
                   Registration Unavailable
                 </h2>
-                <p className="mt-2 text-sm text-gray-600">
+                <p className="mt-2 text-sm text-gray-600 font-['Work_Sans']">
                   Registration requires an internet connection. Please try again when you're online.
                 </p>
                 <Link href="/auth/login" className="mt-4 inline-block">
@@ -125,23 +125,27 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F5F5] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-xl">SK</span>
+          <div className="mx-auto w-24 h-24 flex items-center justify-center">
+            <img 
+              src="/kano-logo.png" 
+              alt="KANO Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-4xl font-extrabold text-black font-['Reem_Kufi']">
             Create your account
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600 font-['Work_Sans']">
             Join Startup Kano Innovation Hub
           </p>
         </div>
 
-        <Card>
+        <Card className="border-2 border-black">
           <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
+            <CardTitle className="text-2xl font-['Reem_Kufi'] text-black">Create Account</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">

@@ -61,15 +61,19 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         {/* Logo Area */}
         <div className="p-6 border-b-2 border-gray-200">
           <Link href="/dashboard" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-[#00A86B] rounded-md flex items-center justify-center border-2 border-black">
-              <span className="text-black font-bold text-lg font-['Reem_Kufi']">SK</span>
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img 
+                src="/kano-logo.png" 
+                alt="KANO Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-black text-lg font-['Reem_Kufi'] leading-tight">
                 Startup Kano
               </span>
               <span className="text-xs text-gray-600 font-['Work_Sans']">
-                center for innovation developement Hub
+                Innovation Hub
               </span>
             </div>
           </Link>
@@ -139,7 +143,7 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         <div className="p-4 border-t-2 border-gray-200">
           <div className="text-center">
             <p className="text-xs text-gray-500 font-['Work_Sans']">
-              © 2024 Startup Kano center for innovation developement Hub
+              © 2024 Startup Kano Innovation Hub
             </p>
             <p className="text-xs text-gray-400 mt-1 font-['Work_Sans']">
               All rights reserved
