@@ -7,8 +7,8 @@ import { Toaster } from 'sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Startup Kano center for innovation developement Hub - Portfolio Management',
-  description: 'Task management and team collaboration platform for Startup Kano center for innovation developement Hub',
+  title: 'Startup Kano Innovation Hub - Portfolio Management',
+  description: 'Task management and team collaboration platform for Startup Kano Innovation Hub',
 }
 
 export default function RootLayout({
