@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Debug</title>
+</head>
+<body>
+    <h1>API Debug Tool</h1>
+    <div id="results"></div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:3001/api/v1';
+        const results = document.getElementById('results');
+        
+        function log(message) {
+            results.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+        
+        async function testAPI() {
+            try {
+                // Test health endpoint
+                log('Testing health endpoint...');
+                const healthResponse = await fetch(`${API_BASE_URL}/health`);
+                const healthData = await healthResponse.json();
+                log('Health: ' + JSON.stringify(healthData));
+                
+                // Test login (you'll need to replace with actual credentials)
+                log('Testing login...');
+                const loginResponse = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com', // Replace with your test email
+                        password: 'password123'     // Replace with your test password
+                    })
+                });
+                
+                if (loginResponse.ok) {
+                    const loginData = await loginResponse.json();
+                    log('Login successful: ' + JSON.stringify(loginData));
+                    
+                    const token = loginData.data?.access_token;
+                    if (token) {
+                        // Test tasks endpoint
+                        log('Testing tasks endpoint...');
+                        const tasksResponse = await fetch(`${API_BASE_URL}/tasks/my-tasks`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        if (tasksResponse.ok) {
+                            const tasksData = await tasksResponse.json();
+                            log('Tasks: ' + JSON.stringify(tasksData));
+                        } else {
+                            log('Tasks error: ' + tasksResponse.status + ' - ' + await tasksResponse.text());
+                        }
+                        
+                        // Test create task
+                        log('Testing create task...');
+                        const createResponse = await fetch(`${API_BASE_URL}/tasks`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                title: 'Test Task',
+                                description: 'This is a test task',
+                                priority: 'medium',
+                                type: 'personal'
+                            })
+                        });
+                        
+                        if (createResponse.ok) {
+                            const createData = await createResponse.json();
+                            log('Create task successful: ' + JSON.stringify(createData));
+                        } else {
+                            log('Create task error: ' + createResponse.status + ' - ' + await createResponse.text());
+                        }
+                    }
+                } else {
+                    log('Login failed: ' + loginResponse.status + ' - ' + await loginResponse.text());
+                }
+                
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
+        }
+        
+        // Run the test
+        testAPI();
+    </script>
+</body>
+</html>

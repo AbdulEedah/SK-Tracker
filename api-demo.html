@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend API Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .success {
+            color: #28a745;
+            background-color: #d4edda;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .info {
+            color: #17a2b8;
+            background-color: #d1ecf1;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.authenticated {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status.unauthenticated {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Backend API Demo</h1>
+    
+    <div class="container">
+        <h2>API Status</h2>
+        <div id="apiStatus">Checking connection...</div>
+        <div id="authStatus" class="status unauthenticated">Not Authenticated</div>
+        <button onclick="checkAPIHealth()">Check API Health</button>
+    </div>
+
+    <div class="container">
+        <h2>Authentication</h2>
+        
+        <div id="signupForm">
+            <h3>Sign Up</h3>
+            <div class="form-group">
+                <label for="signupName">Name:</label>
+                <input type="text" id="signupName" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label for="signupEmail">Email:</label>
+                <input type="email" id="signupEmail" placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <label for="signupRole">Role:</label>
+                <select id="signupRole">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button onclick="signup()">Sign Up</button>
+        </div>
+
+        <div id="loginForm">
+            <h3>Login</h3>
+            <div class="form-group">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" placeholder="Password">
+            </div>
+            <button onclick="login()">Login</button>
+        </div>
+
+        <div id="authenticatedActions" class="hidden">
+            <h3>Authenticated Actions</h3>
+            <button onclick="getProfile()">Get My Profile</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Tasks</h2>
+        <div id="taskActions" class="hidden">
+            <div class="form-group">
+                <label for="taskTitle">Task Title:</label>
+                <input type="text" id="taskTitle" placeholder="Complete project">
+            </div>
+            <div class="form-group">
+                <label for="taskDescription">Description:</label>
+                <textarea id="taskDescription" placeholder="Task description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="taskPriority">Priority:</label>
+                <select id="taskPriority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <button onclick="createTask()">Create Task</button>
+            <button onclick="getMyTasks()">Get My Tasks</button>
+        </div>
+        <div id="taskList"></div>
+    </div>
+
+    <div class="container">
+        <h2>Events & Meetings</h2>
+        <div id="eventsActions" class="hidden">
+            <button onclick="getEvents()">Get Events</button>
+            <button onclick="getMeetings()">Get Meetings</button>
+        </div>
+        <div id="eventsList"></div>
+    </div>
+
+    <div class="container">
+        <h2>API Response</h2>
+        <pre id="apiResponse">No response yet...</pre>
+    </div>
+
+    <script>
+        // Backend API Client (simplified version for browser)
+        class BackendAPIClient {
+            constructor() {
+                this.baseUrl = 'https://startup-baas.onrender.com/api/v1'
+                this.accessToken = localStorage.getItem('accessToken')
+                this.refreshToken = localStorage.getItem('refreshToken')
+                this.updateAuthStatus()
+            }
+
+            async makeRequest(endpoint, options = {}) {
+                const url = `${this.baseUrl}${endpoint}`
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+
+                if (this.accessToken && !options.skipAuth) {
+                    headers['Authorization'] = `Bearer ${this.accessToken}`
+                }
+
+                const config = {
+                    ...options,
+                    headers
+                }
+
+                const response = await fetch(url, config)
+                return response
+            }
+
+            async signup(userData) {
+                const response = await this.makeRequest('/auth/signup', {
+                    method: 'POST',
+                    body: JSON.stringify(userData),
+                    skipAuth: true
+                })
+                return await response.json()
+            }
+
+            async login(email, password) {
+                const response = await this.makeRequest('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password }),
+                    skipAuth: true
+                })
+                
+                if (response.ok) {
+                    const data = await response.json()
+                    this.accessToken = data.access_token
+                    this.refreshToken = data.refresh_token
+                    localStorage.setItem('accessToken', this.accessToken)
+                    localStorage.setItem('refreshToken', this.refreshToken)
+                    this.updateAuthStatus()
+                    return data
+                }
+                
+                throw new Error(`Login failed: ${response.status}`)
+            }
+
+            async logout() {
+                try {
+                    await this.makeRequest('/auth/logout', { method: 'POST' })
+                } catch (error) {
+                    console.log('Logout request failed, clearing local tokens anyway')
+                }
+                
+                this.accessToken = null
+                this.refreshToken = null
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+                this.updateAuthStatus()
+            }
+
+            async getHealth() {
+                const response = await this.makeRequest('/health', { skipAuth: true })
+                return await response.json()
+            }
+
+            async getMyProfile() {
+                const response = await this.makeRequest('/users/me')
+                return await response.json()
+            }
+
+            async createTask(taskData) {
+                const response = await this.makeRequest('/tasks', {
+                    method: 'POST',
+                    body: JSON.stringify(taskData)
+                })
+                return await response.json()
+            }
+
+            async getMyTasks() {
+                const response = await this.makeRequest('/tasks/my-tasks')
+                return await response.json()
+            }
+
+            async getEvents() {
+                const response = await this.makeRequest('/events')
+                return await response.json()
+            }
+
+            async getMeetings() {
+                const response = await this.makeRequest('/meetings')
+                return await response.json()
+            }
+
+            updateAuthStatus() {
+                const authStatus = document.getElementById('authStatus')
+                const authenticatedActions = document.getElementById('authenticatedActions')
+                const taskActions = document.getElementById('taskActions')
+                const eventsActions = document.getElementById('eventsActions')
+                
+                if (this.accessToken) {
+                    authStatus.textContent = 'Authenticated'
+                    authStatus.className = 'status authenticated'
+                    authenticatedActions.classList.remove('hidden')
+                    taskActions.classList.remove('hidden')
+                    eventsActions.classList.remove('hidden')
+                } else {
+                    authStatus.textContent = 'Not Authenticated'
+                    authStatus.className = 'status unauthenticated'
+                    authenticatedActions.classList.add('hidden')
+                    taskActions.classList.add('hidden')
+                    eventsActions.classList.add('hidden')
+                }
+            }
+        }
+
+        // Initialize API client
+        const apiClient = new BackendAPIClient()
+
+        // Helper functions
+        function showResponse(data, isError = false) {
+            const responseEl = document.getElementById('apiResponse')
+            responseEl.textContent = JSON.stringify(data, null, 2)
+            
+            // Show success/error message
+            const existingMsg = document.querySelector('.api-message')
+            if (existingMsg) existingMsg.remove()
+            
+            const msgEl = document.createElement('div')
+            msgEl.className = `api-message ${isError ? 'error' : 'success'}`
+            msgEl.textContent = isError ? 'Request failed' : 'Request successful'
+            responseEl.parentNode.insertBefore(msgEl, responseEl)
+        }
+
+        // API functions
+        async function checkAPIHealth() {
+            try {
+                const health = await apiClient.getHealth()
+                showResponse(health)
+                document.getElementById('apiStatus').innerHTML = 
+                    `<div class="success">✅ API is healthy - ${health.message}</div>`
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+                document.getElementById('apiStatus').innerHTML = 
+                    `<div class="error">❌ API connection failed</div>`
+            }
+        }
+
+        async function signup() {
+            try {
+                const userData = {
+                    name: document.getElementById('signupName').value,
+                    email: document.getElementById('signupEmail').value,
+                    password: document.getElementById('signupPassword').value,
+                    role: document.getElementById('signupRole').value
+                }
+                
+                const result = await apiClient.signup(userData)
+                showResponse(result)
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function login() {
+            try {
+                const email = document.getElementById('loginEmail').value
+                const password = document.getElementById('loginPassword').value
+                
+                const result = await apiClient.login(email, password)
+                showResponse({ message: 'Login successful', user: result.user })
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function logout() {
+            try {
+                await apiClient.logout()
+                showResponse({ message: 'Logged out successfully' })
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function getProfile() {
+            try {
+                const profile = await apiClient.getMyProfile()
+                showResponse(profile)
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function createTask() {
+            try {
+                const taskData = {
+                    title: document.getElementById('taskTitle').value,
+                    description: document.getElementById('taskDescription').value,
+                    priority: document.getElementById('taskPriority').value
+                }
+                
+                const result = await apiClient.createTask(taskData)
+                showResponse(result)
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function getMyTasks() {
+            try {
+                const tasks = await apiClient.getMyTasks()
+                showResponse(tasks)
+                
+                // Display tasks in a nice format
+                const taskList = document.getElementById('taskList')
+                if (Array.isArray(tasks)) {
+                    taskList.innerHTML = '<h4>My Tasks:</h4>' + 
+                        tasks.map(task => `
+                            <div style="border: 1px solid #ddd; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                                <strong>${task.title}</strong><br>
+                                <small>${task.description || 'No description'}</small><br>
+                                <span class="status">${task.status || 'pending'}</span>
+                            </div>
+                        `).join('')
+                }
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function getEvents() {
+            try {
+                const events = await apiClient.getEvents()
+                showResponse(events)
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        async function getMeetings() {
+            try {
+                const meetings = await apiClient.getMeetings()
+                showResponse(meetings)
+            } catch (error) {
+                showResponse({ error: error.message }, true)
+            }
+        }
+
+        // Check API health on page load
+        window.addEventListener('load', checkAPIHealth)
+    </script>
+</body>
+</html>
