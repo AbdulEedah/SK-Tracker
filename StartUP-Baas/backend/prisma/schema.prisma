@@ -1,0 +1,322 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id               String    @id @default(uuid())
+  email            String    @unique
+  password_hash    String
+  full_name        String
+  phone_number     String?
+  role             String    @default("member")
+  is_active        Boolean   @default(true)
+  email_verified   Boolean   @default(false)
+  last_login_at    DateTime?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  assigned_tasks   Task[]    @relation("AssignedTo")
+  created_tasks    Task[]    @relation("AssignedBy")
+  reports          Report[]  @relation("UserReports")
+  reviewed_reports Report[]  @relation("ReviewedBy")
+  
+  meeting_registrations MeetingRegistration[]
+  created_meetings      Meeting[] @relation("MeetingCreator")
+  
+  event_registrations   EventRegistration[]
+  event_feedbacks       EventFeedback[]
+  created_events        Event[] @relation("EventCreator")
+  
+  notifications         Notification[]
+  notification_prefs    NotificationPreference?
+  
+  files                 File[] @relation("UploadedBy")
+  refresh_tokens        RefreshToken[]
+  
+  audit_logs            AuditLog[]
+  task_history          TaskHistory[] @relation("ChangedBy")
+  updated_settings      SystemSetting[] @relation("SettingUpdatedBy")
+  created_templates     EmailTemplate[] @relation("TemplateCreatedBy")
+
+  @@map("users")
+}
+
+model Task {
+  id               String    @id @default(uuid())
+  title            String
+  description      String?
+  type             String // personal, assigned
+  status           String    @default("pending")
+  priority         String    @default("medium")
+  assigned_to      String
+  assigned_by      String?
+  is_personal      Boolean   @default(false)
+  sort_order       Int       @default(0)
+  due_date         DateTime?
+  accepted_at      DateTime?
+  completed_at     DateTime?
+  acknowledged_at  DateTime?
+  revision_notes   String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  assignee         User      @relation("AssignedTo", fields: [assigned_to], references: [id], onDelete: Cascade)
+  assigner         User?     @relation("AssignedBy", fields: [assigned_by], references: [id], onDelete: SetNull)
+  history          TaskHistory[]
+
+  @@map("tasks")
+}
+
+model Report {
+  id               String    @id @default(uuid())
+  user_id          String
+  title            String
+  content          String
+  week_start       DateTime
+  week_end         DateTime
+  status           String    @default("submitted")
+  admin_feedback   String?
+  submitted_at     DateTime?
+  reviewed_at      DateTime?
+  reviewed_by      String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  user             User      @relation("UserReports", fields: [user_id], references: [id], onDelete: Cascade)
+  reviewer         User?     @relation("ReviewedBy", fields: [reviewed_by], references: [id], onDelete: SetNull)
+
+  @@map("reports")
+}
+
+model Meeting {
+  id               String    @id @default(uuid())
+  title            String
+  description      String?
+  meeting_date     DateTime
+  meeting_time     DateTime
+  duration         Int       @default(60)
+  location         String?
+  meeting_type     String    @default("in-person")
+  max_attendees    Int?
+  status           String    @default("scheduled")
+  created_by       String
+  meeting_url      String?
+  agenda           String?
+  minutes          String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  creator          User      @relation("MeetingCreator", fields: [created_by], references: [id], onDelete: Cascade)
+  registrations    MeetingRegistration[]
+
+  @@map("meetings")
+}
+
+model MeetingRegistration {
+  id               String    @id @default(uuid())
+  meeting_id       String
+  user_id          String
+  status           String    @default("registered")
+  registered_at    DateTime  @default(now())
+
+  meeting          Meeting   @relation(fields: [meeting_id], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([meeting_id, user_id])
+  @@map("meeting_registrations")
+}
+
+model Event {
+  id               String    @id @default(uuid())
+  title            String
+  description      String?
+  event_date       DateTime
+  event_time       DateTime
+  location         String?
+  max_participants Int?
+  registration_deadline DateTime?
+  type             String    @default("general")
+  status           String    @default("upcoming")
+  featured         Boolean   @default(false)
+  banner_image     String?
+  created_by       String
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  creator          User      @relation("EventCreator", fields: [created_by], references: [id], onDelete: Cascade)
+  registrations    EventRegistration[]
+  feedbacks        EventFeedback[]
+
+  @@map("events")
+}
+
+model EventRegistration {
+  id               String    @id @default(uuid())
+  event_id         String
+  user_id          String
+  status           String    @default("registered")
+  waitlist_position Int?
+  registered_at    DateTime  @default(now())
+
+  event            Event     @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, user_id])
+  @@map("event_registrations")
+}
+
+model EventFeedback {
+  id               String    @id @default(uuid())
+  event_id         String
+  user_id          String
+  rating           Int?
+  comment          String?
+  would_recommend  Boolean?
+  suggestions      String?
+  created_at       DateTime  @default(now())
+
+  event            Event     @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, user_id])
+  @@map("event_feedback")
+}
+
+model Notification {
+  id               String    @id @default(uuid())
+  user_id          String
+  title            String
+  message          String
+  type             String    @default("info")
+  is_read          Boolean   @default(false)
+  read_at          DateTime?
+  related_resource_type String?
+  related_resource_id String?
+  created_at       DateTime  @default(now())
+
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id               String    @id @default(uuid())
+  user_id          String    @unique
+  email_notifications Boolean @default(true)
+  push_notifications  Boolean @default(true)
+  task_assignments    Boolean @default(true)
+  task_updates        Boolean @default(true)
+  meeting_reminders   Boolean @default(true)
+  event_announcements Boolean @default(true)
+  report_feedback     Boolean @default(true)
+  system_updates      Boolean @default(false)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  user                User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}
+
+model File {
+  id               String    @id @default(uuid())
+  filename         String
+  original_name    String
+  file_path        String
+  file_size        Int
+  mime_type        String
+  category         String
+  uploaded_by      String
+  related_resource_type String?
+  related_resource_id String?
+  is_public        Boolean   @default(false)
+  created_at       DateTime  @default(now())
+
+  uploader         User      @relation("UploadedBy", fields: [uploaded_by], references: [id], onDelete: Cascade)
+
+  @@map("files")
+}
+
+model AuditLog {
+  id               String    @id @default(uuid())
+  user_id          String?
+  action           String
+  resource_type    String
+  resource_id      String?
+  old_values       String?
+  new_values       String?
+  ip_address       String?
+  user_agent       String?
+  created_at       DateTime  @default(now())
+
+  user             User?     @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  id               String    @id @default(uuid())
+  key              String    @unique
+  value            String
+  description      String?
+  updated_by       String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  updater          User?     @relation("SettingUpdatedBy", fields: [updated_by], references: [id], onDelete: SetNull)
+
+  @@map("system_settings")
+}
+
+model EmailTemplate {
+  id               String    @id @default(uuid())
+  name             String    @unique
+  subject          String
+  body             String
+  variables        String
+  is_active        Boolean   @default(true)
+  created_by       String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  creator          User?     @relation("TemplateCreatedBy", fields: [created_by], references: [id], onDelete: SetNull)
+
+  @@map("email_templates")
+}
+
+model TaskHistory {
+  id               String    @id @default(uuid())
+  task_id          String
+  action           String
+  old_value        String?
+  new_value        String?
+  changed_by       String?
+  notes            String?
+  created_at       DateTime  @default(now())
+
+  task             Task      @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  changer          User?     @relation("ChangedBy", fields: [changed_by], references: [id], onDelete: SetNull)
+
+  @@map("task_history")
+}
+
+model RefreshToken {
+  id               String    @id @default(uuid())
+  user_id          String
+  token_hash       String
+  expires_at       DateTime
+  is_revoked       Boolean   @default(false)
+  created_at       DateTime  @default(now())
+
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}

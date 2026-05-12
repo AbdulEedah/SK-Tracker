@@ -1,0 +1,33 @@
+# Render service blueprint sample
+# Customize `name`, `repo`, and `envVars` in your Render dashboard or this file.
+# This is a minimal sample for a Node/NestJS web service.
+services:
+  - type: web
+    name: startup-baas-backend
+    env: node
+    plan: free
+    buildCommand: 'NPM_CONFIG_PRODUCTION=false npm ci && npm run build'
+    startCommand: 'npm run start:prod'
+    # Optional: specify region, instance size, branch, etc.
+    # repo: github.com/<org>/<repo>
+    # branch: main
+    envVars:
+      - key: DATABASE_URL
+        value: '{{DATABASE_URL}}'
+      - key: NODE_ENV
+        value: 'production'
+      - key: DATABASE_SSL
+        value: 'true'
+      - key: DATABASE_SSL_REJECT_UNAUTHORIZED
+        value: 'true'
+      - key: DATABASE_SSL_CA_PATH
+        value: './certs/aiven-ca.pem'
+      - key: JWT_SECRET
+        # Do not commit secrets in repo; set this in Render's dashboard instead.
+        value: 'REPLACE_WITH_JWT_SECRET'
+      - key: JWT_REFRESH_SECRET
+        value: 'REPLACE_WITH_JWT_REFRESH_SECRET'
+      - key: BCRYPT_ROUNDS
+        value: '12'
+      - key: PORT
+        value: '10000'
