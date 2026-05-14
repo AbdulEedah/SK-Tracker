@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { api } from '@/lib/api'
+import { apiClient } from '@/lib/api'
 import { FileUpload } from '@/lib/types'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/Button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { 
   User, 
   Upload, 
@@ -73,7 +73,7 @@ export default function ProfilePage() {
 
     setIsUploading(true)
     try {
-      const response = await api.uploadFile(file, 'profile', false)
+      const response = await apiClient.uploadFile(file, 'profile', false)
       if (response.success) {
         // Create a file record for local storage
         const fileRecord: FileUpload = {
@@ -113,7 +113,7 @@ export default function ProfilePage() {
 
   const handleFileDelete = async (fileId: string) => {
     const fileToDelete = uploadedFiles.find(f => f.id === fileId)
-    const fileName = fileToDelete?.name || 'this file'
+    const fileName = fileToDelete?.original_name || 'this file'
     
     confirm.confirm(
       async () => {
@@ -128,7 +128,7 @@ export default function ProfilePage() {
 
           // Also try to delete from backend if the endpoint exists
           try {
-            await api.request(`/files/${fileId}`, { method: 'DELETE' })
+            await apiClient.deleteFile(fileId)
           } catch (backendError) {
             // Backend deletion failed, but local deletion succeeded
             console.warn('Backend file deletion failed:', backendError)
@@ -155,9 +155,11 @@ export default function ProfilePage() {
 
   const handleFileDownload = async (fileId: string, filename: string) => {
     try {
-      const response = await fetch(`${api.baseURL}/files/${fileId}/download`, {
+      const apiBaseURL = process.env.NEXT_PUBLIC_API_URL || 'https://startup-baas.onrender.com/api/v1'
+      const authToken = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null
+      const response = await fetch(`${apiBaseURL}/files/${fileId}/download`, {
         headers: {
-          'Authorization': `Bearer ${api.token}`
+          'Authorization': `Bearer ${authToken}`
         }
       })
       

@@ -8,6 +8,7 @@ import { StatsCard } from '@/components/dashboard/StatsCard'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { 
   Users, 
@@ -381,12 +382,17 @@ export default function AdminPage() {
           title="Assign New Task"
         >
           <div className="space-y-4">
-            <Input
-              label="Task Title"
-              value={newTask.title}
-              onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter task title"
-            />
+            <div>
+              <Label htmlFor="task-title" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Task Title
+              </Label>
+              <Input
+                id="task-title"
+                value={newTask.title}
+                onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Enter task title"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
                 Description
@@ -515,27 +521,42 @@ export default function AdminPage() {
           title="Add New User"
         >
           <div className="space-y-4">
-            <Input
-              label="Full Name"
-              value={newUser.full_name}
-              onChange={(e) => setNewUser(prev => ({ ...prev, full_name: e.target.value }))}
-              placeholder="Enter user's full name"
-            />
+            <div>
+              <Label htmlFor="user-full-name" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Full Name
+              </Label>
+              <Input
+                id="user-full-name"
+                value={newUser.full_name}
+                onChange={(e) => setNewUser(prev => ({ ...prev, full_name: e.target.value }))}
+                placeholder="Enter user's full name"
+              />
+            </div>
             
-            <Input
-              label="Email Address"
-              type="email"
-              value={newUser.email}
-              onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-              placeholder="Enter user's email"
-            />
+            <div>
+              <Label htmlFor="user-email" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Email Address
+              </Label>
+              <Input
+                id="user-email"
+                type="email"
+                value={newUser.email}
+                onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter user's email"
+              />
+            </div>
             
-            <Input
-              label="Phone Number"
-              value={newUser.phone_number}
-              onChange={(e) => setNewUser(prev => ({ ...prev, phone_number: e.target.value }))}
-              placeholder="Enter user's phone number"
-            />
+            <div>
+              <Label htmlFor="user-phone" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Phone Number
+              </Label>
+              <Input
+                id="user-phone"
+                value={newUser.phone_number}
+                onChange={(e) => setNewUser(prev => ({ ...prev, phone_number: e.target.value }))}
+                placeholder="Enter user's phone number"
+              />
+            </div>
             
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
@@ -582,12 +603,17 @@ export default function AdminPage() {
           size="lg"
         >
           <div className="space-y-4">
-            <Input
-              label="Notification Title"
-              value={notification.title}
-              onChange={(e) => setNotification(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter notification title"
-            />
+            <div>
+              <Label htmlFor="notification-title" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Notification Title
+              </Label>
+              <Input
+                id="notification-title"
+                value={notification.title}
+                onChange={(e) => setNotification(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Enter notification title"
+              />
+            </div>
             
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">

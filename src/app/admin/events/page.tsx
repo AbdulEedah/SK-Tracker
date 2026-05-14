@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -452,12 +453,17 @@ export default function AdminEventsPage() {
           size="lg"
         >
           <div className="space-y-4">
-            <Input
-              label="Event Title"
-              value={newEvent.title}
-              onChange={(e) => setNewEvent(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter event title"
-            />
+            <div>
+              <Label htmlFor="event-title" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Event Title
+              </Label>
+              <Input
+                id="event-title"
+                value={newEvent.title}
+                onChange={(e) => setNewEvent(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Enter event title"
+              />
+            </div>
             
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
@@ -473,41 +479,66 @@ export default function AdminEventsPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="event-date" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Event Date
+                </Label>
+                <Input
+                  id="event-date"
+                  type="date"
+                  value={newEvent.event_date}
+                  onChange={(e) => setNewEvent(prev => ({ ...prev, event_date: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="event-time" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Event Time
+                </Label>
+                <Input
+                  id="event-time"
+                  type="time"
+                  value={newEvent.event_time}
+                  onChange={(e) => setNewEvent(prev => ({ ...prev, event_time: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="event-location" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Location
+              </Label>
               <Input
-                label="Event Date"
-                type="date"
-                value={newEvent.event_date}
-                onChange={(e) => setNewEvent(prev => ({ ...prev, event_date: e.target.value }))}
-              />
-              <Input
-                label="Event Time"
-                type="time"
-                value={newEvent.event_time}
-                onChange={(e) => setNewEvent(prev => ({ ...prev, event_time: e.target.value }))}
+                id="event-location"
+                value={newEvent.location}
+                onChange={(e) => setNewEvent(prev => ({ ...prev, location: e.target.value }))}
+                placeholder="Enter event location"
               />
             </div>
 
-            <Input
-              label="Location"
-              value={newEvent.location}
-              onChange={(e) => setNewEvent(prev => ({ ...prev, location: e.target.value }))}
-              placeholder="Enter event location"
-            />
-
             <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Max Participants (Optional)"
-                type="number"
-                value={newEvent.max_participants}
-                onChange={(e) => setNewEvent(prev => ({ ...prev, max_participants: e.target.value }))}
-                placeholder="Leave empty for unlimited"
-              />
-              <Input
-                label="Registration Deadline"
-                type="date"
-                value={newEvent.registration_deadline}
-                onChange={(e) => setNewEvent(prev => ({ ...prev, registration_deadline: e.target.value }))}
-              />
+              <div>
+                <Label htmlFor="max-participants" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Max Participants (Optional)
+                </Label>
+                <Input
+                  id="max-participants"
+                  type="number"
+                  value={newEvent.max_participants}
+                  onChange={(e) => setNewEvent(prev => ({ ...prev, max_participants: e.target.value }))}
+                  placeholder="Leave empty for unlimited"
+                />
+              </div>
+              <div>
+                <Label htmlFor="registration-deadline" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Registration Deadline
+                </Label>
+                <Input
+                  id="registration-deadline"
+                  type="date"
+                  value={newEvent.registration_deadline}
+                  onChange={(e) => setNewEvent(prev => ({ ...prev, registration_deadline: e.target.value }))}
+                />
+              </div>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">

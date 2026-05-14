@@ -1,29 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter, Poppins, Outfit } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { Toaster } from 'sonner'
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-inter',
-  display: 'swap',
-})
+// Import local fonts
+import '@fontsource/work-sans/300.css'
+import '@fontsource/work-sans/400.css'
+import '@fontsource/work-sans/500.css'
+import '@fontsource/work-sans/600.css'
+import '@fontsource/work-sans/700.css'
+import '@fontsource/work-sans/800.css'
 
-const poppins = Poppins({ 
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-poppins',
-  display: 'swap',
-})
-
-const outfit = Outfit({ 
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-outfit',
-  display: 'swap',
-})
+import '@fontsource/reem-kufi/400.css'
+import '@fontsource/reem-kufi/500.css'
+import '@fontsource/reem-kufi/600.css'
+import '@fontsource/reem-kufi/700.css'
 
 export const metadata: Metadata = {
   title: 'Startup Kano center for innovation developement Hub - Portfolio Management',
@@ -37,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable} ${outfit.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <AuthProvider>
           {children}
           <Toaster 

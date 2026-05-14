@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/layout/ProtectedRoute'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { Modal } from '@/components/ui/Modal'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -477,12 +478,17 @@ export default function AdminMeetingsPage() {
           size="lg"
         >
           <div className="space-y-4">
-            <Input
-              label="Meeting Title"
-              value={newMeeting.title}
-              onChange={(e) => setNewMeeting(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter meeting title"
-            />
+            <div>
+              <Label htmlFor="meeting-title" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Meeting Title
+              </Label>
+              <Input
+                id="meeting-title"
+                value={newMeeting.title}
+                onChange={(e) => setNewMeeting(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Enter meeting title"
+              />
+            </div>
             
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
@@ -498,25 +504,40 @@ export default function AdminMeetingsPage() {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <Input
-                label="Meeting Date"
-                type="date"
-                value={newMeeting.meeting_date}
-                onChange={(e) => setNewMeeting(prev => ({ ...prev, meeting_date: e.target.value }))}
-              />
-              <Input
-                label="Meeting Time"
-                type="time"
-                value={newMeeting.meeting_time}
-                onChange={(e) => setNewMeeting(prev => ({ ...prev, meeting_time: e.target.value }))}
-              />
-              <Input
-                label="Duration (minutes)"
-                type="number"
-                value={newMeeting.duration}
-                onChange={(e) => setNewMeeting(prev => ({ ...prev, duration: e.target.value }))}
-                placeholder="60"
-              />
+              <div>
+                <Label htmlFor="meeting-date" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Meeting Date
+                </Label>
+                <Input
+                  id="meeting-date"
+                  type="date"
+                  value={newMeeting.meeting_date}
+                  onChange={(e) => setNewMeeting(prev => ({ ...prev, meeting_date: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="meeting-time" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Meeting Time
+                </Label>
+                <Input
+                  id="meeting-time"
+                  type="time"
+                  value={newMeeting.meeting_time}
+                  onChange={(e) => setNewMeeting(prev => ({ ...prev, meeting_time: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="meeting-duration" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Duration (minutes)
+                </Label>
+                <Input
+                  id="meeting-duration"
+                  type="number"
+                  value={newMeeting.duration}
+                  onChange={(e) => setNewMeeting(prev => ({ ...prev, duration: e.target.value }))}
+                  placeholder="60"
+                />
+              </div>
             </div>
 
             <div>
@@ -534,29 +555,44 @@ export default function AdminMeetingsPage() {
               </select>
             </div>
 
-            <Input
-              label="Location"
-              value={newMeeting.location}
-              onChange={(e) => setNewMeeting(prev => ({ ...prev, location: e.target.value }))}
-              placeholder={newMeeting.meeting_type === 'virtual' ? 'Virtual Meeting Room' : 'Enter meeting location'}
-            />
+            <div>
+              <Label htmlFor="meeting-location" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Location
+              </Label>
+              <Input
+                id="meeting-location"
+                value={newMeeting.location}
+                onChange={(e) => setNewMeeting(prev => ({ ...prev, location: e.target.value }))}
+                placeholder={newMeeting.meeting_type === 'virtual' ? 'Virtual Meeting Room' : 'Enter meeting location'}
+              />
+            </div>
 
             {(newMeeting.meeting_type === 'virtual' || newMeeting.meeting_type === 'hybrid') && (
-              <Input
-                label="Meeting Link"
-                value={newMeeting.meeting_link}
-                onChange={(e) => setNewMeeting(prev => ({ ...prev, meeting_link: e.target.value }))}
-                placeholder="https://meet.google.com/abc-defg-hij"
-              />
+              <div>
+                <Label htmlFor="meeting-link" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Meeting Link
+                </Label>
+                <Input
+                  id="meeting-link"
+                  value={newMeeting.meeting_link}
+                  onChange={(e) => setNewMeeting(prev => ({ ...prev, meeting_link: e.target.value }))}
+                  placeholder="https://meet.google.com/abc-defg-hij"
+                />
+              </div>
             )}
 
-            <Input
-              label="Max Attendees (Optional)"
-              type="number"
-              value={newMeeting.max_attendees}
-              onChange={(e) => setNewMeeting(prev => ({ ...prev, max_attendees: e.target.value }))}
-              placeholder="Leave empty for unlimited"
-            />
+            <div>
+              <Label htmlFor="max-attendees" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Max Attendees (Optional)
+              </Label>
+              <Input
+                id="max-attendees"
+                type="number"
+                value={newMeeting.max_attendees}
+                onChange={(e) => setNewMeeting(prev => ({ ...prev, max_attendees: e.target.value }))}
+                placeholder="Leave empty for unlimited"
+              />
+            </div>
 
             <div className="flex justify-end space-x-3 pt-4">
               <Button

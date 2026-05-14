@@ -8,6 +8,7 @@ import { TaskCard } from '@/components/dashboard/TaskCard'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { Card, CardContent } from '@/components/ui/Card'
 import { 
   CheckSquare, 
@@ -330,12 +331,17 @@ export default function AdminTasksPage() {
           title="Assign New Task"
         >
           <div className="space-y-4">
-            <Input
-              label="Task Title"
-              value={newTask.title}
-              onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="Enter task title"
-            />
+            <div>
+              <Label htmlFor="task-title" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Task Title
+              </Label>
+              <Input
+                id="task-title"
+                value={newTask.title}
+                onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="Enter task title"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
                 Description

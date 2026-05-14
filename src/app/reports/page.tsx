@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { 
   FileText, 
   Plus, 
@@ -466,19 +467,29 @@ export default function ReportsPage() {
           size="lg"
         >
           <div className="space-y-4">
-            <Input
-              label="Report Title"
-              value={newReport.title}
-              onChange={(e) => setNewReport(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="e.g., Weekly Progress Report - Week 1"
-            />
+            <div>
+              <Label htmlFor="report-title" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Report Title
+              </Label>
+              <Input
+                id="report-title"
+                value={newReport.title}
+                onChange={(e) => setNewReport(prev => ({ ...prev, title: e.target.value }))}
+                placeholder="e.g., Weekly Progress Report - Week 1"
+              />
+            </div>
             
-            <Input
-              label="Week Ending Date"
-              type="date"
-              value={newReport.week_end}
-              onChange={(e) => setNewReport(prev => ({ ...prev, week_end: e.target.value }))}
-            />
+            <div>
+              <Label htmlFor="week-end-date" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Week Ending Date
+              </Label>
+              <Input
+                id="week-end-date"
+                type="date"
+                value={newReport.week_end}
+                onChange={(e) => setNewReport(prev => ({ ...prev, week_end: e.target.value }))}
+              />
+            </div>
             
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">

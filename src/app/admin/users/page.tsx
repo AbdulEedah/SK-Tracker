@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/Modal'
 import { PdfIndicator } from '@/components/ui/PdfIndicator'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { 
   Users, 
   Plus, 
@@ -418,20 +419,30 @@ export default function AdminUsersPage() {
           title="Add New User"
         >
           <div className="space-y-4">
-            <Input
-              label="Full Name"
-              value={newUser.full_name}
-              onChange={(e) => setNewUser(prev => ({ ...prev, full_name: e.target.value }))}
-              placeholder="Enter user's full name"
-            />
+            <div>
+              <Label htmlFor="user-full-name" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Full Name
+              </Label>
+              <Input
+                id="user-full-name"
+                value={newUser.full_name}
+                onChange={(e) => setNewUser(prev => ({ ...prev, full_name: e.target.value }))}
+                placeholder="Enter user's full name"
+              />
+            </div>
             
-            <Input
-              label="Email Address"
-              type="email"
-              value={newUser.email}
-              onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-              placeholder="Enter user's email"
-            />
+            <div>
+              <Label htmlFor="user-email" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                Email Address
+              </Label>
+              <Input
+                id="user-email"
+                type="email"
+                value={newUser.email}
+                onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter user's email"
+              />
+            </div>
             
             <div>
               <label className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">

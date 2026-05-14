@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { apiClient } from '@/lib/api'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Mail, Lock, Eye, EyeOff, Phone, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -86,33 +87,51 @@ export default function LoginPage() {
                 </div>
               )}
 
-              <Input
-                label="Email or Phone Number"
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email or phone number"
-                icon={email.includes('@') ? <Mail className="h-5 w-5 text-gray-400" /> : <Phone className="h-5 w-5 text-gray-400" />}
-                required
-              />
+              <div>
+                <Label htmlFor="email" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Email or Phone Number
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="email"
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email or phone number"
+                    required
+                    className="pl-10"
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {email.includes('@') ? <Mail className="h-5 w-5 text-gray-400" /> : <Phone className="h-5 w-5 text-gray-400" />}
+                  </div>
+                </div>
+              </div>
 
-              <div className="relative">
-                <Input
-                  label="Password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  icon={<Lock className="h-5 w-5 text-gray-400" />}
-                  required
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-9 text-gray-400 hover:text-[#00A86B] transition-colors"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
+              <div>
+                <Label htmlFor="password" className="block text-sm font-medium text-black mb-2 font-['Work_Sans']">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    required
+                    className="pl-10 pr-10"
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <button
+                    type="button"
+                    className="absolute right-3 top-3 text-gray-400 hover:text-[#00A86B] transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
               <Button
