@@ -1,5 +1,7 @@
 # SK-Tracker - Startup Kano Innovation Hub
 
+<!-- Updated for production deployment with Render backend -->
+
 A comprehensive task management and team collaboration platform built with Next.js 16, React 19, TypeScript, and Supabase. Features dual-mode auth (online/offline), role-based access, complete task lifecycle management, real-time updates, and responsive design. Perfect for startup teams needing reliable workflow management.
 
 ## 🚀 Features
