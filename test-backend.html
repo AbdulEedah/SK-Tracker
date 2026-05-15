@@ -20,6 +20,7 @@
     
     <button onclick="testHealthCheck()">Test Health Check</button>
     <button onclick="testSignup()">Test Signup</button>
+    <button onclick="testLogin()">Test Login</button>
     <button onclick="clearResults()">Clear Results</button>
     
     <div id="results"></div>
@@ -82,6 +83,57 @@
                 }
             } catch (error) {
                 addResult(`❌ Signup test error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testLogin() {
+            addResult('Testing login endpoint...', 'info');
+            try {
+                // First, let's try with the actual admin credentials
+                const testData = {
+                    email: 'startupkano@gmail.com',
+                    password: '12345678sk'
+                };
+                
+                addResult(`Attempting login with: ${testData.email}`, 'info');
+                
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addResult(`✅ Login test successful: <pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+                } else {
+                    addResult(`❌ Login test failed: ${response.status} - <pre>${JSON.stringify(data, null, 2)}</pre>`, 'error');
+                    
+                    // Let's also try to get more info about available users
+                    addResult('Let me check what users might exist...', 'info');
+                    
+                    // Try a different set of credentials
+                    const altData = {
+                        email: 'test@example.com',
+                        password: 'password123'
+                    };
+                    
+                    const altResponse = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(altData)
+                    });
+                    
+                    const altResult = await altResponse.json();
+                    addResult(`Alternative login attempt: ${altResponse.status} - <pre>${JSON.stringify(altResult, null, 2)}</pre>`, altResponse.ok ? 'success' : 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Login test error: ${error.message}`, 'error');
             }
         }
     </script>
